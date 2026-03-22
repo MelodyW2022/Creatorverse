@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 function CreatorImage({ creator }) {
   if (creator.imageURL) {
     return <img className="creator-card-image" src={creator.imageURL} alt={creator.name} />;
@@ -13,14 +15,16 @@ function CreatorImage({ creator }) {
 export default function CreatorCard({ creator }) {
   return (
     <article className="panel creator-card">
-      <CreatorImage creator={creator} />
+      <Link className="creator-card-body" to={`/creators/${creator.id}`} aria-label={creator.name}>
+        <CreatorImage creator={creator} />
 
-      <div className="panel-copy">
-        <p className="eyebrow">Creator</p>
-        <h2>{creator.name}</h2>
-        <p>{creator.description}</p>
-        <p className="creator-card-url">{creator.url}</p>
-      </div>
+        <div className="panel-copy">
+          <p className="eyebrow">Creator</p>
+          <h2>{creator.name}</h2>
+          <p>{creator.description}</p>
+          <p className="creator-card-url">{creator.url}</p>
+        </div>
+      </Link>
     </article>
   );
 }

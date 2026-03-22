@@ -1,8 +1,9 @@
 import { MemoryRouter } from 'react-router-dom';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import App from './App';
 import { getSupabaseClientState } from './client';
+import { createHybridClient, createListClient } from './test/supabaseMock';
 
 vi.mock('./client', () => ({
   getSupabaseClientState: vi.fn(),
@@ -11,6 +12,12 @@ vi.mock('./client', () => ({
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
+  vi.unstubAllEnvs();
+});
+
+beforeEach(() => {
+  vi.stubEnv('VITE_SUPABASE_URL', 'https://example.supabase.co');
+  vi.stubEnv('VITE_SUPABASE_ANON_KEY', 'test-anon-key');
 });
 
 function renderAt(path) {
@@ -22,13 +29,38 @@ function renderAt(path) {
 }
 
 describe('App', () => {
-  it('renders every frozen route shell', () => {
-    getSupabaseClientState.mockReturnValue({ client: {}, error: null });
+  it('renders the home route with fetched creators', async () => {
+    getSupabaseClientState.mockReturnValue({
+      client: createListClient({
+        data: [
+          {
+            id: 1,
+            name: 'Ada',
+            url: 'https://example.com/ada',
+            description: 'Mathematician and creator.',
+            imageURL: '',
+          },
+        ],
+        error: null,
+      }),
+      error: null,
+    });
 
     renderAt('/');
-    expect(screen.getByRole('heading', { name: 'Creatorverse' })).toBeInTheDocument();
 
-    cleanup();
+    expect(screen.getByRole('heading', { name: 'Creatorverse' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Ada' })).toBeInTheDocument();
+  });
+
+  it('renders every frozen route shell', () => {
+    getSupabaseClientState.mockReturnValue({
+      client: createHybridClient({
+        listResponse: { data: [], error: null },
+        detailResponse: { data: null, error: null },
+      }),
+      error: null,
+    });
+
     renderAt('/creators/new');
     expect(screen.getByRole('heading', { name: 'New creator' })).toBeInTheDocument();
 
@@ -52,6 +84,9 @@ describe('App', () => {
 
     expect(
       screen.getByRole('heading', { name: 'Creatorverse is not configured yet' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY/i),
     ).toBeInTheDocument();
   });
 });
