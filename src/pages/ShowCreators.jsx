@@ -4,7 +4,7 @@ import { getSupabaseClientState } from '../client';
 
 const CREATOR_FIELDS = 'id, name, url, description, imageURL';
 
-export default function ShowCreators() {
+export default function ShowCreators({ embedded = false } = {}) {
   const [creators, setCreators] = useState([]);
   const [status, setStatus] = useState('loading');
   const [message, setMessage] = useState('');
@@ -48,11 +48,11 @@ export default function ShowCreators() {
   }, []);
 
   return (
-    <section className="page">
-      <header className="page-header">
-        <p className="eyebrow">Homepage</p>
-        <h1>Creatorverse</h1>
-        <p className="page-intro">Browse a curated list of creators and jump into their details.</p>
+    <section className={embedded ? 'creators-section' : 'page'}>
+      <header className="page-header" id={embedded ? 'creators-list' : undefined}>
+        <p className="eyebrow">Creators</p>
+        <h2>All creators</h2>
+        <p className="page-intro">Browse the creators in the database and open any profile.</p>
       </header>
 
       {status === 'loading' ? (

@@ -92,7 +92,7 @@ describe('EditCreator', () => {
     expect(await screen.findByTestId('location')).toHaveTextContent('/creators/7');
   });
 
-  it('deletes the creator after confirmation and redirects home', async () => {
+  it('deletes the creator after confirmation and redirects to the creators list', async () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
 
     renderPage({
@@ -116,7 +116,7 @@ describe('EditCreator', () => {
     await screen.findByDisplayValue('Ada');
     fireEvent.click(screen.getByRole('button', { name: 'Delete creator' }));
 
-    expect(await screen.findByTestId('location')).toHaveTextContent('/');
+    expect(await screen.findByTestId('location')).toHaveTextContent('/creators');
   });
 
   it('does not delete when confirmation is canceled', async () => {

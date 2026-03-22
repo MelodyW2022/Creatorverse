@@ -33,7 +33,7 @@ function renderPage(clientState) {
 }
 
 describe('AddCreator', () => {
-  it('creates a creator and redirects home', async () => {
+  it('creates a creator and redirects to the creators list', async () => {
     renderPage({
       client: createHybridClient({
         listResponse: { data: [], error: null },
@@ -61,7 +61,7 @@ describe('AddCreator', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: 'Create creator' }));
 
-    expect(await screen.findByTestId('location')).toHaveTextContent('/');
+    expect(await screen.findByTestId('location')).toHaveTextContent('/creators');
   });
 
   it('shows a readable error when creation fails', async () => {

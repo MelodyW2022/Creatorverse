@@ -114,7 +114,7 @@ export default function EditCreator() {
         throw new Error(deleteError.message);
       }
 
-      navigate('/');
+      navigate('/creators');
     } catch (deleteError) {
       setDeleteMessage(
         deleteError instanceof Error && deleteError.message
@@ -131,7 +131,7 @@ export default function EditCreator() {
       <header className="page-header">
         <p className="eyebrow">Edit creator</p>
         <h1>Edit creator</h1>
-        <p className="page-intro">Update a creator and return to their profile.</p>
+        <p className="page-intro">Update a creator, or remove them from the list.</p>
       </header>
 
       {status === 'loading' ? (
@@ -180,11 +180,16 @@ export default function EditCreator() {
             <div className="panel-copy">
               <p className="eyebrow">Danger zone</p>
               <h3>Delete this creator</h3>
-              <p>This removes the creator from the database and sends you back home.</p>
+              <p>This removes the creator from the database and sends you back to the list.</p>
             </div>
 
             <div className="panel-actions">
-              <button className="button button-danger" type="button" onClick={handleDeleteCreator} disabled={isDeleting}>
+              <button
+                className="button button-danger"
+                type="button"
+                onClick={handleDeleteCreator}
+                disabled={isDeleting}
+              >
                 {isDeleting ? 'Deleting...' : 'Delete creator'}
               </button>
             </div>

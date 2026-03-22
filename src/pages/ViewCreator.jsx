@@ -120,8 +120,8 @@ export default function ViewCreator() {
             <Link className="button button-secondary" to={`/creators/${creator.id}/edit`}>
               Edit creator
             </Link>
-            <Link className="button button-secondary" to="/">
-              Back home
+            <Link className="button button-secondary" to="/creators">
+              Back to creators
             </Link>
           </div>
         </article>

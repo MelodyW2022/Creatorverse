@@ -28,7 +28,7 @@ export default function AddCreator() {
       throw new Error('Creator could not be created.');
     }
 
-    navigate('/');
+    navigate('/creators');
   }
 
   return (
@@ -36,7 +36,7 @@ export default function AddCreator() {
       <header className="page-header">
         <p className="eyebrow">Add creator</p>
         <h1>New creator</h1>
-        <p className="page-intro">Create a new creator and send them straight to the homepage.</p>
+        <p className="page-intro">Create a new creator and send them back to the list.</p>
       </header>
 
       <CreatorForm
