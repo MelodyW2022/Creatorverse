@@ -4,7 +4,7 @@ import { getSupabaseClientState } from '../client';
 
 const CREATOR_FIELDS = 'id, name, url, description, imageURL';
 
-export default function ShowCreators({ embedded = false } = {}) {
+export default function ShowCreators({ embedded = false, refreshToken = 0 } = {}) {
   const [creators, setCreators] = useState([]);
   const [status, setStatus] = useState('loading');
   const [message, setMessage] = useState('');
@@ -45,7 +45,7 @@ export default function ShowCreators({ embedded = false } = {}) {
     return () => {
       active = false;
     };
-  }, []);
+  }, [refreshToken]);
 
   return (
     <section className={embedded ? 'creators-section' : 'page'}>

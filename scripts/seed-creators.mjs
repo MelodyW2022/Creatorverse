@@ -8,31 +8,36 @@ const CREATORS = [
     name: 'Ali Abdaal',
     url: 'https://www.youtube.com/@aliabdaal',
     description: 'Productivity, learning, and creator business videos.',
-    imageURL: 'https://i.ytimg.com/vi/4d6x1u6fPqY/maxresdefault.jpg',
+    imageURL:
+      'https://yt3.googleusercontent.com/ytc/AIdro_m2xx6mCZwsyjARnkwBKJxEv0FqGxGS2NwWNkjWH__Smw=s900-c-k-c0x00ffffff-no-rj',
   },
   {
     name: 'Lydia Violet',
     url: 'https://www.twitch.tv/lydiaviolet',
     description: 'A live streamer who mixes gaming, chatting, and cozy variety content.',
-    imageURL: 'https://static-cdn.jtvnw.net/jtv_user_pictures/lydiaviolet-profile_image-8c7c2c16b7b7c3d7-300x300.jpeg',
+    imageURL:
+      'https://static-cdn.jtvnw.net/jtv_user_pictures/03b43302-8793-40e4-8825-a714817ae7ad-profile_image-300x300.png',
   },
   {
     name: 'Kevin Stratvert',
     url: 'https://www.youtube.com/@KevinStratvert',
     description: 'Practical tutorials for productivity tools and everyday software.',
-    imageURL: 'https://i.ytimg.com/vi/4Z4iM6q1Rz4/maxresdefault.jpg',
+    imageURL:
+      'https://yt3.googleusercontent.com/ytc/AIdro_lr4ES_dIDpNgSSrKh-AibkIGYafS2IaX2D1aA_8j_-QeIG=s900-c-k-c0x00ffffff-no-rj',
   },
   {
     name: 'Marques Brownlee',
     url: 'https://www.youtube.com/@mkbhd',
     description: 'High-quality tech reviews, product breakdowns, and industry commentary.',
-    imageURL: 'https://i.ytimg.com/vi/K1Qh8rX3w8E/maxresdefault.jpg',
+    imageURL:
+      'https://yt3.googleusercontent.com/qu4TmIaYUlS41-dJ9gZ7DUR3nilvmB5_11i6OKSdvNnBNiyOusZP1bMN6ICnuxtjFBb6ioKgRQ=s900-c-k-c0x00ffffff-no-rj',
   },
   {
     name: 'Jazza',
     url: 'https://www.youtube.com/@Jazza',
     description: 'Creative art challenges, illustration videos, and playful design experiments.',
-    imageURL: 'https://i.ytimg.com/vi/0Qx8Kj4d1fE/maxresdefault.jpg',
+    imageURL:
+      'https://yt3.googleusercontent.com/NxkGR-9Go3siyXFGk45g7ny7H3yvwm8hkaN6iY4xeekvTCJ_4MvwV-J59Yx1VgfMGACY_Kxx=s900-c-k-c0x00ffffff-no-rj',
   },
 ];
 
@@ -106,51 +111,117 @@ async function main() {
     Prefer: 'return=minimal',
   };
 
-  const existingResponse = await fetch(`${restBase}/creators?select=url`, {
-    headers,
-  });
+  const existingCreatorsResponse = await fetch(
+    `${restBase}/creators?select=id,url,name,description,imageURL`,
+    {
+      headers,
+    },
+  );
 
-  if (!existingResponse.ok) {
-    throw new Error(`Unable to read existing creators: ${existingResponse.status} ${existingResponse.statusText}`);
+  if (!existingCreatorsResponse.ok) {
+    throw new Error(
+      `Unable to read existing creators: ${existingCreatorsResponse.status} ${existingCreatorsResponse.statusText}`,
+    );
   }
 
-  const existingCreators = await existingResponse.json();
-  const existingUrls = new Set(existingCreators.map((creator) => creator.url));
-  const missingCreators = CREATORS.filter((creator) => !existingUrls.has(creator.url));
+  const existingCreators = await existingCreatorsResponse.json();
+  const existingByUrl = new Map(existingCreators.map((creator) => [creator.url, creator]));
+  const missingCreators = [];
+  const creatorsToUpdate = [];
 
-  console.log(`Found ${existingUrls.size} existing creator(s).`);
+  for (const creator of CREATORS) {
+    const existingCreator = existingByUrl.get(creator.url);
 
-  if (missingCreators.length === 0) {
-    console.log('No new creators to insert.');
+    if (!existingCreator) {
+      missingCreators.push(creator);
+      continue;
+    }
+
+    const shouldUpdate =
+      existingCreator.name !== creator.name ||
+      existingCreator.description !== creator.description ||
+      existingCreator.imageURL !== creator.imageURL;
+
+    if (shouldUpdate) {
+      creatorsToUpdate.push({ id: existingCreator.id, ...creator });
+    }
+  }
+
+  console.log(`Found ${existingCreators.length} existing creator(s).`);
+
+  if (creatorsToUpdate.length > 0) {
+    console.log(`Would update ${creatorsToUpdate.length} creator(s).`);
+  }
+
+  if (missingCreators.length > 0) {
+    console.log(`Would insert ${missingCreators.length} creator(s).`);
+  }
+
+  if (creatorsToUpdate.length === 0 && missingCreators.length === 0) {
+    console.log('No changes needed.');
     return;
   }
 
-  console.log(`Would insert ${missingCreators.length} creator(s).`);
-
   if (dryRun) {
+    for (const creator of creatorsToUpdate) {
+      console.log(`- update ${creator.name} (${creator.url})`);
+    }
+
     for (const creator of missingCreators) {
-      console.log(`- ${creator.name} (${creator.url})`);
+      console.log(`- insert ${creator.name} (${creator.url})`);
     }
 
     return;
   }
 
-  const insertResponse = await fetch(`${restBase}/creators`, {
-    method: 'POST',
-    headers: {
-      ...headers,
-      Prefer: 'return=representation',
-    },
-    body: JSON.stringify(missingCreators),
-  });
+  for (const creator of creatorsToUpdate) {
+    const updateResponse = await fetch(`${restBase}/creators?id=eq.${creator.id}`, {
+      method: 'PATCH',
+      headers: {
+        ...headers,
+        Prefer: 'return=representation',
+      },
+      body: JSON.stringify({
+        name: creator.name,
+        url: creator.url,
+        description: creator.description,
+        imageURL: creator.imageURL,
+      }),
+    });
 
-  if (!insertResponse.ok) {
-    const errorText = await insertResponse.text();
-    throw new Error(`Unable to insert creators: ${insertResponse.status} ${insertResponse.statusText}\n${errorText}`);
+    if (!updateResponse.ok) {
+      const errorText = await updateResponse.text();
+      throw new Error(
+        `Unable to update creator ${creator.url}: ${updateResponse.status} ${updateResponse.statusText}\n${errorText}`,
+      );
+    }
   }
 
-  const insertedCreators = await insertResponse.json();
-  console.log(`Inserted ${insertedCreators.length} creator(s).`);
+  let insertedCreators = [];
+
+  if (missingCreators.length > 0) {
+    const insertResponse = await fetch(`${restBase}/creators`, {
+      method: 'POST',
+      headers: {
+        ...headers,
+        Prefer: 'return=representation',
+      },
+      body: JSON.stringify(missingCreators),
+    });
+
+    if (!insertResponse.ok) {
+      const errorText = await insertResponse.text();
+      throw new Error(
+        `Unable to insert creators: ${insertResponse.status} ${insertResponse.statusText}\n${errorText}`,
+      );
+    }
+
+    insertedCreators = await insertResponse.json();
+  }
+
+  console.log(
+    `Updated ${creatorsToUpdate.length} creator(s) and inserted ${insertedCreators.length} creator(s).`,
+  );
 }
 
 main().catch((error) => {

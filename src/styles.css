@@ -229,6 +229,20 @@ textarea {
   animation: landing-fade 700ms ease-out both;
 }
 
+.landing-content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 78rem);
+  display: grid;
+  gap: 2rem;
+}
+
+.landing-add-section {
+  display: grid;
+  gap: 1.25rem;
+  scroll-margin-top: 1.5rem;
+}
+
 .landing-title {
   margin: 0;
   color: #fff;
@@ -276,12 +290,6 @@ textarea {
 .landing-button:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.78);
   outline-offset: 3px;
-}
-
-.landing-creators {
-  position: relative;
-  z-index: 1;
-  width: min(100%, 78rem);
 }
 
 .topbar {

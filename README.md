@@ -25,7 +25,7 @@ Open the local URL shown by Vite, usually `http://localhost:5173`.
 
 ## Seed The Database
 
-The project includes an idempotent seed script that inserts five creator rows if they are missing.
+The project includes an idempotent seed script that inserts the curated creator rows if they are missing and updates existing rows that match by URL so avatars stay current.
 
 Dry-run first:
 
@@ -39,7 +39,7 @@ Run the live seed:
 npm run seed:creators
 ```
 
-The script reads `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from either your environment or `.env.local`, checks existing creators by `url`, and skips duplicates on reruns.
+The script reads `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from either your environment or `.env.local`, checks existing creators by `url`, updates stale seed rows, and skips duplicates on reruns.
 
 ## Verification
 

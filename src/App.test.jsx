@@ -53,6 +53,11 @@ describe('App', () => {
       'href',
       '#creators-list',
     );
+    expect(screen.getByRole('link', { name: 'ADD A CREATOR' })).toHaveAttribute(
+      'href',
+      '#add-creator',
+    );
+    expect(await screen.findByRole('heading', { name: 'Add a creator' })).toBeInTheDocument();
     expect(await screen.findByRole('heading', { name: 'All creators' })).toBeInTheDocument();
     expect(await screen.findByRole('heading', { name: 'Ada' })).toBeInTheDocument();
   });
@@ -77,6 +82,7 @@ describe('App', () => {
     renderAt('/creators');
 
     expect(screen.getByRole('heading', { name: 'CREATORVERSE' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Add a creator' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'All creators' })).toBeInTheDocument();
     expect(await screen.findByRole('heading', { name: 'Ada' })).toBeInTheDocument();
   });

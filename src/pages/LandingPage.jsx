@@ -1,7 +1,10 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import AddCreator from './AddCreator';
 import ShowCreators from './ShowCreators';
 
 export default function LandingPage() {
+  const [refreshToken, setRefreshToken] = useState(0);
+
   return (
     <main className="landing-page">
       <div className="landing-stars" aria-hidden="true" />
@@ -12,14 +15,20 @@ export default function LandingPage() {
           <a className="landing-button" href="#creators-list">
             VIEW ALL CREATORS
           </a>
-          <Link className="landing-button" to="/creators/new">
+          <a className="landing-button" href="#add-creator">
             ADD A CREATOR
-          </Link>
+          </a>
         </div>
       </section>
 
-      <section className="landing-creators" aria-label="Creators list">
-        <ShowCreators embedded />
+      <section className="landing-content" aria-label="Homepage content">
+        <AddCreator
+          embedded
+          onCreated={() => {
+            setRefreshToken((current) => current + 1);
+          }}
+        />
+        <ShowCreators embedded refreshToken={refreshToken} />
       </section>
     </main>
   );

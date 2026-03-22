@@ -61,7 +61,7 @@ describe('AddCreator', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: 'Create creator' }));
 
-    expect(await screen.findByTestId('location')).toHaveTextContent('/creators');
+    expect(await screen.findByTestId('location')).toHaveTextContent('/');
   });
 
   it('shows a readable error when creation fails', async () => {

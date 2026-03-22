@@ -15,7 +15,7 @@ afterEach(() => {
 });
 
 describe('LandingPage', () => {
-  it('renders the splash screen actions', () => {
+  it('renders the splash screen actions and embedded add section', () => {
     getSupabaseClientState.mockReturnValue({
       client: createListClient({
         data: [],
@@ -37,8 +37,9 @@ describe('LandingPage', () => {
     );
     expect(screen.getByRole('link', { name: 'ADD A CREATOR' })).toHaveAttribute(
       'href',
-      '/creators/new',
+      '#add-creator',
     );
+    expect(screen.getByRole('heading', { name: 'Add a creator' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'All creators' })).toBeInTheDocument();
   });
 });
