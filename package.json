@@ -9,7 +9,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "seed:creators": "node scripts/seed-creators.mjs"
   },
   "repository": {
     "type": "git",
