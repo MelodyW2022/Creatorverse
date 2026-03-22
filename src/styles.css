@@ -219,7 +219,8 @@ textarea {
 }
 
 .landing-stage {
-  position: relative;
+  position: sticky;
+  top: 1.5rem;
   z-index: 1;
   display: grid;
   justify-items: center;
@@ -227,6 +228,7 @@ textarea {
   width: min(100%, 70rem);
   text-align: center;
   animation: landing-fade 700ms ease-out both;
+  padding-block: 1.5rem 0.5rem;
 }
 
 .landing-content {
@@ -235,6 +237,7 @@ textarea {
   width: min(100%, 78rem);
   display: grid;
   gap: 2rem;
+  padding-top: 1rem;
 }
 
 .landing-add-section {
@@ -563,6 +566,7 @@ textarea {
 
   .landing-stage {
     gap: 1.5rem;
+    top: 1rem;
   }
 
   .landing-title {
