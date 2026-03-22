@@ -1,0 +1,39 @@
+{
+  "name": "creatorverse",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MelodyW2022/Creatorverse.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MelodyW2022/Creatorverse/issues"
+  },
+  "homepage": "https://github.com/MelodyW2022/Creatorverse#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.99.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@vitejs/plugin-react": "^6.0.1",
+    "jsdom": "^29.0.1",
+    "vite": "^8.0.1",
+    "vitest": "^4.1.0"
+  }
+}
