@@ -11,6 +11,8 @@ export default function EditCreator() {
   const [creator, setCreator] = useState(null);
   const [status, setStatus] = useState('loading');
   const [message, setMessage] = useState('');
+  const [deleteMessage, setDeleteMessage] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -88,6 +90,42 @@ export default function EditCreator() {
     navigate(`/creators/${id}`);
   }
 
+  async function handleDeleteCreator() {
+    const shouldDelete = window.confirm('Delete this creator? This action cannot be undone.');
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    const { client, error } = getSupabaseClientState();
+
+    if (error) {
+      setDeleteMessage(error);
+      return;
+    }
+
+    setIsDeleting(true);
+    setDeleteMessage('');
+
+    try {
+      const { error: deleteError } = await client.from('creators').delete().eq('id', id);
+
+      if (deleteError) {
+        throw new Error(deleteError.message);
+      }
+
+      navigate('/');
+    } catch (deleteError) {
+      setDeleteMessage(
+        deleteError instanceof Error && deleteError.message
+          ? deleteError.message
+          : 'Unable to delete this creator right now.',
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
   return (
     <section className="page">
       <header className="page-header">
@@ -121,13 +159,37 @@ export default function EditCreator() {
       ) : null}
 
       {status === 'ready' && creator ? (
-        <CreatorForm
-          title="Edit creator"
-          description="Adjust the details and save the changes back to Supabase."
-          initialValues={creator}
-          submitLabel="Save changes"
-          onSubmit={handleUpdateCreator}
-        />
+        <>
+          {deleteMessage ? (
+            <article className="panel state-panel" role="alert">
+              <p className="eyebrow">Delete error</p>
+              <h2>Unable to delete creator</h2>
+              <p>{deleteMessage}</p>
+            </article>
+          ) : null}
+
+          <CreatorForm
+            title="Edit creator"
+            description="Adjust the details and save the changes back to Supabase."
+            initialValues={creator}
+            submitLabel="Save changes"
+            onSubmit={handleUpdateCreator}
+          />
+
+          <article className="panel">
+            <div className="panel-copy">
+              <p className="eyebrow">Danger zone</p>
+              <h3>Delete this creator</h3>
+              <p>This removes the creator from the database and sends you back home.</p>
+            </div>
+
+            <div className="panel-actions">
+              <button className="button button-danger" type="button" onClick={handleDeleteCreator} disabled={isDeleting}>
+                {isDeleting ? 'Deleting...' : 'Delete creator'}
+              </button>
+            </div>
+          </article>
+        </>
       ) : null}
     </section>
   );

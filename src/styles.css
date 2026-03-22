@@ -1,50 +1,241 @@
-* {
-  box-sizing: border-box;
+:root {
+  font-family: 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  color: #182236;
+  background:
+    radial-gradient(circle at top left, rgba(120, 140, 255, 0.2), transparent 28%),
+    radial-gradient(circle at top right, rgba(255, 183, 90, 0.22), transparent 24%),
+    #f4f7fb;
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
 }
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f5f7;
-  color: #1f2933;
-}
-
-a {
-  color: inherit;
-}
-
-button,
-input,
-textarea {
-  font: inherit;
-}
-
-#root {
   min-height: 100vh;
+  background: inherit;
 }
 
 .app-shell {
-  width: min(960px, calc(100vw - 2rem));
-  margin: 0 auto;
-  padding: 3rem 0 4rem;
-}
-
-.panel {
-  background: #fff;
-  border: 1px solid #d9e2ec;
-  border-radius: 20px;
+  min-height: 100vh;
   padding: 1.5rem;
+  display: grid;
+  gap: 1.5rem;
 }
 
-.hero-panel {
-  text-align: center;
+.app-shell-error {
+  place-content: center;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand {
+  color: inherit;
+  text-decoration: none;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.topbar-nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.topbar-nav a,
+.button {
+  color: inherit;
+}
+
+.page {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.page-header {
+  max-width: 60ch;
+}
+
+.page-intro,
+.panel p {
+  line-height: 1.5;
 }
 
 .eyebrow {
-  margin: 0 0 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  margin: 0 0 0.35rem;
   text-transform: uppercase;
-  color: #52606d;
+  letter-spacing: 0.16em;
+  font-size: 0.75rem;
+  color: #53607a;
+}
+
+.panel {
+  border: 1px solid rgba(24, 34, 54, 0.08);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 18px 50px rgba(24, 34, 54, 0.08);
+}
+
+.error-panel {
+  max-width: 42rem;
+  padding: 1.5rem;
+}
+
+.state-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.state-card,
+.creator-card,
+.creator-form,
+.panel {
+  padding: 1.25rem;
+}
+
+.state-panel {
+  max-width: 42rem;
+}
+
+.creator-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.creator-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.creator-card-body {
+  display: grid;
+  gap: 1rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.creator-card-image,
+.creator-detail-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 1rem;
+  object-fit: cover;
+  background: rgba(24, 34, 54, 0.08);
+}
+
+.creator-card-placeholder {
+  display: grid;
+  place-items: center;
+  color: #53607a;
+  font-size: 0.95rem;
+}
+
+.creator-card-url {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #53607a;
+  word-break: break-word;
+}
+
+.creator-detail {
+  display: grid;
+  gap: 1rem;
+  max-width: 42rem;
+}
+
+.panel-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  background: #182236;
+  color: #fff;
+  text-decoration: none;
+  border: 0;
+}
+
+.button-secondary {
+  background: transparent;
+  color: #182236;
+  border: 1px solid rgba(24, 34, 54, 0.16);
+}
+
+.button-danger {
+  background: #8c1f1f;
+}
+
+.creator-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.form-alert {
+  padding: 0.9rem 1rem;
+  border-radius: 0.9rem;
+  background: rgba(184, 35, 35, 0.08);
+  color: #8c1f1f;
+  border: 1px solid rgba(184, 35, 35, 0.18);
+}
+
+.creator-form label {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.creator-form input,
+.creator-form textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(24, 34, 54, 0.12);
+  border-radius: 0.9rem;
+  font: inherit;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.field-error {
+  color: #8c1f1f;
+  font-size: 0.9rem;
+}
+
+.creator-form input[aria-invalid='true'],
+.creator-form textarea[aria-invalid='true'] {
+  border-color: rgba(184, 35, 35, 0.45);
+  background: rgba(184, 35, 35, 0.04);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (min-width: 720px) {
+  .app-shell {
+    padding: 2rem;
+  }
+
+  .creator-card,
+  .creator-form {
+    max-width: 42rem;
+  }
 }

@@ -92,6 +92,64 @@ describe('EditCreator', () => {
     expect(await screen.findByTestId('location')).toHaveTextContent('/creators/7');
   });
 
+  it('deletes the creator after confirmation and redirects home', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+    renderPage({
+      client: createHybridClient({
+        listResponse: { data: [], error: null },
+        detailResponse: {
+          data: {
+            id: 7,
+            name: 'Ada',
+            url: 'https://example.com/ada',
+            description: 'Builds with precision.',
+            imageURL: 'https://example.com/ada.jpg',
+          },
+          error: null,
+        },
+        deleteResponse: { data: null, error: null },
+      }),
+      error: null,
+    });
+
+    await screen.findByDisplayValue('Ada');
+    fireEvent.click(screen.getByRole('button', { name: 'Delete creator' }));
+
+    expect(await screen.findByTestId('location')).toHaveTextContent('/');
+  });
+
+  it('does not delete when confirmation is canceled', async () => {
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+
+    const client = createHybridClient({
+      listResponse: { data: [], error: null },
+      detailResponse: {
+        data: {
+          id: 7,
+          name: 'Ada',
+          url: 'https://example.com/ada',
+          description: 'Builds with precision.',
+          imageURL: 'https://example.com/ada.jpg',
+        },
+        error: null,
+      },
+      deleteResponse: { data: null, error: null },
+    });
+
+    renderPage({
+      client,
+      error: null,
+    });
+
+    await screen.findByDisplayValue('Ada');
+    fireEvent.click(screen.getByRole('button', { name: 'Delete creator' }));
+
+    expect(confirmSpy).toHaveBeenCalledOnce();
+    expect(client.from('creators').delete).not.toHaveBeenCalled();
+    expect(screen.getByTestId('location')).toHaveTextContent('/creators/7/edit');
+  });
+
   it('shows not found when the creator does not exist', async () => {
     renderPage({
       client: createHybridClient({
@@ -128,6 +186,34 @@ describe('EditCreator', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Update failed');
+    expect(screen.getByTestId('location')).toHaveTextContent('/creators/7/edit');
+  });
+
+  it('shows a readable error when delete fails', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+    renderPage({
+      client: createHybridClient({
+        listResponse: { data: [], error: null },
+        detailResponse: {
+          data: {
+            id: 7,
+            name: 'Ada',
+            url: 'https://example.com/ada',
+            description: 'Builds with precision.',
+            imageURL: 'https://example.com/ada.jpg',
+          },
+          error: null,
+        },
+        deleteResponse: { data: null, error: { message: 'Delete failed' } },
+      }),
+      error: null,
+    });
+
+    await screen.findByDisplayValue('Ada');
+    fireEvent.click(screen.getByRole('button', { name: 'Delete creator' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Delete failed');
     expect(screen.getByTestId('location')).toHaveTextContent('/creators/7/edit');
   });
 });
