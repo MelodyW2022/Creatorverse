@@ -25,6 +25,15 @@ export default function CreatorCard({ creator }) {
           <p className="creator-card-url">{creator.url}</p>
         </div>
       </Link>
+
+      <div className="panel-actions">
+        <a className="button" href={creator.url} target="_blank" rel="noreferrer">
+          Visit creator URL
+        </a>
+        <Link className="button button-secondary" to={`/creators/${creator.id}/edit`}>
+          Edit creator
+        </Link>
+      </div>
     </article>
   );
 }
