@@ -223,18 +223,25 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 3;
-  display: grid;
-  justify-items: center;
-  gap: 2.25rem;
-  width: min(100%, 70rem);
-  text-align: center;
+  width: 100%;
   animation: landing-fade 700ms ease-out both;
   min-height: var(--landing-hero-offset);
-  align-content: center;
   padding: 2rem 0;
   background:
-    linear-gradient(180deg, rgba(2, 3, 8, 0.94) 0%, rgba(2, 3, 8, 0.78) 72%, rgba(2, 3, 8, 0) 100%);
+    linear-gradient(180deg, rgba(2, 3, 8, 0.99) 0%, rgba(2, 3, 8, 0.98) 62%, rgba(2, 3, 8, 0.94) 84%, rgba(2, 3, 8, 0.88) 100%);
   backdrop-filter: blur(6px);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.28);
+}
+
+.landing-stage-inner {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 2.25rem;
+  width: min(100%, 70rem);
+  min-height: calc(var(--landing-hero-offset) - 4rem);
+  margin-inline: auto;
+  text-align: center;
 }
 
 .landing-content {
@@ -571,9 +578,13 @@ textarea {
   }
 
   .landing-stage {
-    gap: 1.5rem;
     min-height: clamp(16rem, 34vh, 22rem);
     padding-block: 1.5rem;
+  }
+
+  .landing-stage-inner {
+    gap: 1.5rem;
+    min-height: calc(clamp(16rem, 34vh, 22rem) - 3rem);
   }
 
   .landing-title {

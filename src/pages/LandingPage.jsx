@@ -46,29 +46,31 @@ export default function LandingPage() {
     <main className="landing-page">
       <div className="landing-stars" aria-hidden="true" />
       <section className="landing-stage">
-        <h1 className="landing-title">CREATORVERSE</h1>
+        <div className="landing-stage-inner">
+          <h1 className="landing-title">CREATORVERSE</h1>
 
-        <div className="landing-actions">
-          <a
-            className="landing-button"
-            href="#creators-list"
-            onClick={(event) => {
-              event.preventDefault();
-              scrollToSection('creators-list');
-            }}
-          >
-            VIEW ALL CREATORS
-          </a>
-          <a
-            className="landing-button"
-            href="#add-creator"
-            onClick={(event) => {
-              event.preventDefault();
-              scrollToSection('add-creator');
-            }}
-          >
-            ADD A CREATOR
-          </a>
+          <div className="landing-actions">
+            <a
+              className="landing-button"
+              href="#creators-list"
+              onClick={(event) => {
+                event.preventDefault();
+                scrollToSection('creators-list');
+              }}
+            >
+              VIEW ALL CREATORS
+            </a>
+            <a
+              className="landing-button"
+              href="#add-creator"
+              onClick={(event) => {
+                event.preventDefault();
+                scrollToSection('add-creator');
+              }}
+            >
+              ADD A CREATOR
+            </a>
+          </div>
         </div>
       </section>
 
