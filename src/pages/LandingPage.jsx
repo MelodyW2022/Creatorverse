@@ -12,17 +12,13 @@ export default function LandingPage() {
       return;
     }
 
-    const hero = document.querySelector('.landing-stage');
-    const heroOffset = hero ? hero.getBoundingClientRect().height + 24 : 0;
-    const top = window.scrollY + target.getBoundingClientRect().top - heroOffset;
-
     if (pushHash) {
       window.history.replaceState(null, '', `#${sectionId}`);
     }
 
-    window.scrollTo({
-      top: Math.max(top, 0),
+    target.scrollIntoView({
       behavior: 'smooth',
+      block: 'start',
     });
   }
 
