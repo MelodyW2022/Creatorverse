@@ -1,9 +1,46 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddCreator from './AddCreator';
 import ShowCreators from './ShowCreators';
 
 export default function LandingPage() {
   const [refreshToken, setRefreshToken] = useState(0);
+
+  function scrollToSection(sectionId, pushHash = true) {
+    const target = document.getElementById(sectionId);
+
+    if (!target) {
+      return;
+    }
+
+    const hero = document.querySelector('.landing-stage');
+    const heroOffset = hero ? hero.getBoundingClientRect().height + 24 : 0;
+    const top = window.scrollY + target.getBoundingClientRect().top - heroOffset;
+
+    if (pushHash) {
+      window.history.replaceState(null, '', `#${sectionId}`);
+    }
+
+    window.scrollTo({
+      top: Math.max(top, 0),
+      behavior: 'smooth',
+    });
+  }
+
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+
+    if (!hash) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      scrollToSection(hash, false);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
+  }, []);
 
   return (
     <main className="landing-page">
@@ -12,10 +49,24 @@ export default function LandingPage() {
         <h1 className="landing-title">CREATORVERSE</h1>
 
         <div className="landing-actions">
-          <a className="landing-button" href="#creators-list">
+          <a
+            className="landing-button"
+            href="#creators-list"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollToSection('creators-list');
+            }}
+          >
             VIEW ALL CREATORS
           </a>
-          <a className="landing-button" href="#add-creator">
+          <a
+            className="landing-button"
+            href="#add-creator"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollToSection('add-creator');
+            }}
+          >
             ADD A CREATOR
           </a>
         </div>

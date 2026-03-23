@@ -115,9 +115,10 @@ textarea {
 }
 
 .landing-page {
+  --landing-hero-offset: clamp(19rem, 42vh, 26rem);
   position: relative;
   min-height: 100vh;
-  overflow: hidden;
+  overflow-x: clip;
   display: grid;
   justify-items: center;
   align-content: start;
@@ -220,15 +221,20 @@ textarea {
 
 .landing-stage {
   position: sticky;
-  top: 1.5rem;
-  z-index: 1;
+  top: 0;
+  z-index: 3;
   display: grid;
   justify-items: center;
   gap: 2.25rem;
   width: min(100%, 70rem);
   text-align: center;
   animation: landing-fade 700ms ease-out both;
-  padding-block: 1.5rem 0.5rem;
+  min-height: var(--landing-hero-offset);
+  align-content: center;
+  padding: 2rem 0;
+  background:
+    linear-gradient(180deg, rgba(2, 3, 8, 0.94) 0%, rgba(2, 3, 8, 0.78) 72%, rgba(2, 3, 8, 0) 100%);
+  backdrop-filter: blur(6px);
 }
 
 .landing-content {
@@ -237,13 +243,13 @@ textarea {
   width: min(100%, 78rem);
   display: grid;
   gap: 2rem;
-  padding-top: 1rem;
+  margin-top: -1rem;
 }
 
 .landing-add-section {
   display: grid;
   gap: 1.25rem;
-  scroll-margin-top: 1.5rem;
+  scroll-margin-top: calc(var(--landing-hero-offset) + 1.5rem);
 }
 
 .landing-title {
@@ -343,7 +349,7 @@ textarea {
 }
 
 .creators-section .page-header {
-  scroll-margin-top: 1.5rem;
+  scroll-margin-top: calc(var(--landing-hero-offset) + 1.5rem);
 }
 
 .page-intro,
@@ -566,7 +572,8 @@ textarea {
 
   .landing-stage {
     gap: 1.5rem;
-    top: 1rem;
+    min-height: clamp(16rem, 34vh, 22rem);
+    padding-block: 1.5rem;
   }
 
   .landing-title {
