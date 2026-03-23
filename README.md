@@ -1,49 +1,52 @@
-# Creatorverse
+# WEB103 Prework - *Creatorverse*
 
-Creatorverse is a small React app for browsing, adding, editing, and deleting content creators backed by Supabase.
+Submitted by: **Sheung Wan Wong**
 
-## Local Setup
+About this web app: **Creatorverse is a React and Supabase app for browsing, adding, editing, and deleting favorite content creators through a polished card-based interface.**
 
-```bash
-npm install
-```
+Time spent: **12** hours
 
-Create a `.env.local` file in the project root with your Supabase values:
+## Required Features
 
-```env
-VITE_SUPABASE_URL=https://your-project-ref.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
-```
+The following **required** functionality is completed:
 
-## Run The App
+<!-- Make sure to check off completed functionality below -->
+- [x] **A logical component structure in React is used to create the frontend of the app**
+- [x] **At least five content creators are displayed on the homepage of the app**
+- [x] **Each content creator item includes their name, a link to their channel/page, and a short description of their content**
+- [x] **API calls use the async/await design pattern via Axios or fetch()**
+- [x] **Clicking on a content creator item takes the user to their details page, which includes their name, url, and description**
+- [x] **Each content creator has their own unique URL**
+- [x] **The user can edit a content creator to change their name, url, or description**
+- [x] **The user can delete a content creator**
+- [x] **The user can add a new content creator by entering a name, url, or description and then it is displayed on the homepage**
 
-```bash
-npm run dev
-```
+The following **optional** features are implemented:
 
-Open the local URL shown by Vite, usually `http://localhost:5173`.
+- [ ] Picocss is used to style HTML elements
+- [x] The content creator items are displayed in a creative format, like cards instead of a list
+- [x] An image of each content creator is shown on their content creator card
 
-## Seed The Database
+The following **additional** features are implemented:
 
-The project includes an idempotent seed script that inserts the curated creator rows if they are missing and updates existing rows that match by URL so avatars stay current.
+* [x] Added a cinematic landing page with smooth-scroll shortcuts to the creator list and add-creator form
+* [x] Added loading, empty, error, and not-found states across the app for clearer Supabase feedback
+* [x] Added reusable form validation plus a seed script and Vitest coverage for the CRUD flows
 
-Dry-run first:
+## Video Walkthrough
 
-```bash
-npm run seed:creators -- --dry-run
-```
+Here's a walkthrough of implemented required features:
 
-Run the live seed:
+<img src='./assets/prework.gif' title='Video Walkthrough' width='900' alt='Video Walkthrough' />
 
-```bash
-npm run seed:creators
-```
+GIF created with local screen recording tools.
 
-The script reads `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from either your environment or `.env.local`, checks existing creators by `url`, updates stale seed rows, and skips duplicates on reruns.
+## Notes
 
-## Verification
+The main challenge was making the CRUD flow feel complete instead of just technically functional. That included keeping the landing page and creator management flows on-brand, handling empty/error states cleanly, and making sure the same Supabase-backed data worked across list, detail, add, edit, and delete interactions.
 
-```bash
-npm run build
-npm test -- --run
-```
+## License
+
+Copyright [2026] [Sheung Wan Wong]
+
+Licensed under the ISC License.

@@ -25,10 +25,10 @@ Your **mission** 🧑‍🚀 is to build a frontend that supports CRUD (create, 
 
 The **purpose** of your app is to share **at least five** creators you think are worth following and give yourself the ability to create, update, and delete creators. Each `Creator` should have:
 
-- [ ] a `name`
-- [ ] a `url` (the link to their channel or page)
-- [ ] a `description`
-- [ ] (optional) an `imageURL` that links to a picture of the creator or some of their content
+- [x] a `name`
+- [x] a `url` (the link to their channel or page)
+- [x] a `description`
+- [x] (optional) an `imageURL` that links to a picture of the creator or some of their content
 
 You **must** use React to create your app, and you may *optionally* use PicoCSS to style HTML elements.
 
@@ -36,25 +36,25 @@ Let's get started! 🚀
 
 ### Required Features
 
-- [ ] Use a logical component structure in React to create the frontend of the app
-- [ ] Display **at least five** content creators on the homepage of the app
-- [ ] Each content creator item includes:
-  - [ ] their `name`
-  - [ ] a link to their channel or page
-  - [ ] a short description of their content
-- [ ] API calls use the async/await design pattern via Axios or fetch
-- [ ] Clicking on a content creator item takes the user to their details page, which includes their `name`, `url`, and `description`
-- [ ] Each content creator has their own unique URL
-- [ ] The user can edit a content creator to change their `name`, `url`, or `description`
-- [ ] The user can delete a content creator
-- [ ] The user can add a new content creator by entering a `name`, `url`, and `description`
-  - [ ] The new content creator then appears in the displayed list
+- [x] Use a logical component structure in React to create the frontend of the app
+- [x] Display **at least five** content creators on the homepage of the app
+- [x] Each content creator item includes:
+  - [x] their `name`
+  - [x] a link to their channel or page
+  - [x] a short description of their content
+- [x] API calls use the async/await design pattern via Axios or fetch
+- [x] Clicking on a content creator item takes the user to their details page, which includes their `name`, `url`, and `description`
+- [x] Each content creator has their own unique URL
+- [x] The user can edit a content creator to change their `name`, `url`, or `description`
+- [x] The user can delete a content creator
+- [x] The user can add a new content creator by entering a `name`, `url`, and `description`
+  - [x] The new content creator then appears in the displayed list
 
 ### Stretch Features
 
 - [ ] Use [**Picocss**](https://picocss.com/) to style HTML elements
-- [ ] Display content creator items in a creative format, like cards instead of a list
-- [ ] Show an image of each content creator on their content creator card
+- [x] Display content creator items in a creative format, like cards instead of a list
+- [x] Show an image of each content creator on their content creator card
 
 ### Step 0: Setting Up Your Project
 
@@ -101,10 +101,10 @@ In this step, you'll create a new Supabase database for your project. You want t
 
 In this step, you'll add the Supabase client to your project so you can connect the front-end to the database.
 
-- [ ] Install the Supabase library using the following command: `npm install @supabase/supabase-js`
-- [ ] In the `src` directory, create a JavaScript file called `client.js`
+- [x] Install the Supabase library using the following command: `npm install @supabase/supabase-js`
+- [x] In the `src` directory, create a JavaScript file called `client.js`
 - [ ] In `client.js`:
-  - [ ] Import `createClient` from Supabase:
+  - [x] Import `createClient` from Supabase:
 
     ```js
     import { createClient } from '@supabase/supabase-js';
@@ -140,14 +140,14 @@ In this step, you'll add the Supabase client to your project so you can connect 
 
 Now that you have all the components you need, it's time to build your 💫 Creatorverse! Let's start by creating the components and pages you need.
 
-- [ ] In the `src` directory, create a subdirectory called `components`.
-- [ ] In the `components` directory, create a file to represent a content creator. This component should contain the content creator's information (`name`, `url`, `description`, and `imageURL` (optional)) so it can be displayed on the main page. For example, you might want to create a `Card` file to organize a content creator's information on a card.
-- [ ] In the `src` directory, create a subdirectory called `pages`.
-- [ ] In the `pages` directory, create the pages you need. For example:
-  - [ ] a `ShowCreators` page to show all content creators
-  - [ ] a `ViewCreator` page to view a single content creator
-  - [ ] an `EditCreator` page to allow the user to update a content creator's information
-  - [ ] an `AddCreator` page to allow the user to add a new content creator
+- [x] In the `src` directory, create a subdirectory called `components`.
+- [x] In the `components` directory, create a file to represent a content creator. This component should contain the content creator's information (`name`, `url`, `description`, and `imageURL` (optional)) so it can be displayed on the main page. For example, you might want to create a `Card` file to organize a content creator's information on a card.
+- [x] In the `src` directory, create a subdirectory called `pages`.
+- [x] In the `pages` directory, create the pages you need. For example:
+  - [x] a `ShowCreators` page to show all content creators
+  - [x] a `ViewCreator` page to view a single content creator
+  - [x] an `EditCreator` page to allow the user to update a content creator's information
+  - [x] an `AddCreator` page to allow the user to add a new content creator
 
 :::info
 💡 **Some Tips to Consider**
@@ -170,9 +170,9 @@ In this step, you'll need to create the routes that allow the user to go between
 Edit your `App` page by:
 
 - [ ] Importing `useRoutes` from `react-router-dom`
-- [ ] Importing your pages for showing all creators, viewing a creator, editing a creator, adding a creator
-- [ ] Defining the paths and elements for the main page, edit page, new page, and view page
-- [ ] Inserting the element into the `App` container
+- [x] Importing your pages for showing all creators, viewing a creator, editing a creator, adding a creator
+- [x] Defining the paths and elements for the main page, edit page, new page, and view page
+- [x] Inserting the element into the `App` container
 
 :::info
 **Resources**
@@ -187,7 +187,7 @@ Edit your `App` page by:
 
 Edit the component you created to contain a content creator's information by:
 
-- [ ] Displaying the content creator's name, URL, description, and image
+- [x] Displaying the content creator's name, URL, description, and image
 
 :::info
 **Resources**
@@ -203,13 +203,13 @@ Right now, the user can't see all of the content creators that have been added t
 Edit your `App` file by:
 
 - [ ] Importing `supabase` from `client.js`
-- [ ] Inside a call to the `useEffect()` function, write an asynchronous function to fetch the data from your database. Don't forget to call the function you wrote at the end of the call to `useEffect()`.
+- [x] Inside a call to the `useEffect()` function, write an asynchronous function to fetch the data from your database. Don't forget to call the function you wrote at the end of the call to `useEffect()`.
 
 Edit the page you created to display all content creators by:
 
-- [ ] Importing the component that displays a content creator's information
-- [ ] Creating content creator components for each one in the database
-- [ ] Displaying a message if there are no content creators in the database
+- [x] Importing the component that displays a content creator's information
+- [x] Creating content creator components for each one in the database
+- [x] Displaying a message if there are no content creators in the database
 
 :::info
 **Resources**
@@ -230,8 +230,8 @@ When a user clicks on a content creator, they should be taken to a page that all
 Edit the page you created for viewing a single content creator by:
 
 - [ ] Importing `supabase` from `client.js`
-- [ ] Getting the content creator's information from the database
-- [ ] Displaying the content creator's name, URL, description, and image
+- [x] Getting the content creator's information from the database
+- [x] Displaying the content creator's name, URL, description, and image
 
 :::info
 **Resources**
@@ -245,14 +245,13 @@ Phew! We're doing good so far! Next, let's allow the user to add a content creat
 
 Edit your home page by:
 
-- [ ] Adding a button on your main page to allow the user to add a content creator
-  - [ ] The button should go to the page you created for adding a content creator
+- [x] Adding a button on your main page to allow the user to add a content creator
 
 Edit the page you created for adding a content creator by:
 
 - [ ] Importing `supabase` from `client.js`
-- [ ] Adding a form for the user to enter details about the new content creator (`name`, `url`, `description`, and `imageURL` (optional))
-- [ ] Writing an asynchronous function to add the new content creator to the database
+- [x] Adding a form for the user to enter details about the new content creator (`name`, `url`, `description`, and `imageURL` (optional))
+- [x] Writing an asynchronous function to add the new content creator to the database
 
 :::info
 **Resources**
@@ -269,11 +268,11 @@ The user should also be able to update a content creator...you know, in case som
 Edit the page you created for editing a content creator by:
 
 - [ ] Importing `supabase` from `client.js`
-- [ ] Adding a form for the user to modify the `name`, `url`, `description`, and `imageURL` (optional) for a content creator
-- [ ] Getting the content creator's information from the database
-- [ ] Loading the content creator's information into the form
-- [ ] Writing an asynchronous function to update the content creator in the database
-- [ ] Calling the function on a submit button
+- [x] Adding a form for the user to modify the `name`, `url`, `description`, and `imageURL` (optional) for a content creator
+- [x] Getting the content creator's information from the database
+- [x] Loading the content creator's information into the form
+- [x] Writing an asynchronous function to update the content creator in the database
+- [x] Calling the function on a submit button
 
 :::success
 <a href="/course_images/web103/prework/creatorupdate.gif" target="_blank"><img src='/course_images/web103/prework/creatorupdate.gif' title='Screenshot of app with core features implemented' width='600' alt='Screenshot of app with core features implemented' /></a>
@@ -290,8 +289,8 @@ Edit the page you created for editing a content creator by:
 
 Well now that we have the functionality in place, let's go back and add buttons or links to the component for the content creator and/or the page to view a single content creator.
 
-- [ ] On the component for the content creator, add a button or link to edit their information
-- [ ] On the page to view a content creator, add a button or link to edit their information
+- [x] On the component for the content creator, add a button or link to edit their information
+- [x] On the page to view a content creator, add a button or link to edit their information
 
 ### Step 9: Deleting a Content Creator
 
@@ -299,9 +298,9 @@ Someone might think a content creator isn't really 💫 Creatorverse-worthy...so
 
 Edit the page you created for updating a content creator by:
 
-- [ ] Adding a delete button
-- [ ] Writing an asynchronous function to delete a content creator from the database
-- [ ] Calling the function on the delete button
+- [x] Adding a delete button
+- [x] Writing an asynchronous function to delete a content creator from the database
+- [x] Calling the function on the delete button
 
 :::success
 🎉 Congratulations 🎉 
@@ -316,8 +315,8 @@ If you have time left over, continue on to the stretch features to customize and
 Your 💫 Creatorverse is looking great! Try implementing some of the stretch features to take it to the next level.
 
 - [ ] Use [**Picocss**](https://picocss.com/) to style HTML elements
-- [ ] Display content creator items in a creative format, like cards instead of a list
-- [ ] Show the content creator's image on their content creator card
+- [x] Display content creator items in a creative format, like cards instead of a list
+- [x] Show the content creator's image on their content creator card
 
 ### Adding the Prework to Your Application
 
