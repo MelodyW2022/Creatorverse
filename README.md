@@ -39,6 +39,8 @@ Here's a walkthrough of implemented required features:
 
 <img src='./assets/prework.gif' title='Video Walkthrough' width='900' alt='Video Walkthrough' />
 
+MP4 walkthrough: [creatorverse.mp4](./creatorverse.mp4)
+
 GIF created with local screen recording tools.
 
 ## Notes
