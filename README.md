@@ -39,9 +39,6 @@ Here's a walkthrough of implemented required features:
 
 https://www.youtube.com/watch?v=U0lfyE8d88w
 
-
-GIF preview generated from the recorded walkthrough for README rendering.
-
 ## Notes
 
 The main challenge was making the CRUD flow feel complete instead of just technically functional. That included keeping the landing page and creator management flows on-brand, handling empty/error states cleanly, and making sure the same Supabase-backed data worked across list, detail, add, edit, and delete interactions.
