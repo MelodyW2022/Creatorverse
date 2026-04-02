@@ -37,7 +37,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented required features:
 
-<img src='./assets/creatorverse.gif' title='Video Walkthrough' width='900' alt='Video Walkthrough' />
+https://www.youtube.com/watch?v=U0lfyE8d88w
 
 
 GIF preview generated from the recorded walkthrough for README rendering.
