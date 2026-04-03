@@ -2,11 +2,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import ShowCreators from './ShowCreators';
-import { getSupabaseClientState } from '../client';
-import { createListClient } from '../test/supabaseMock';
+import { listCreators } from '../client';
 
 vi.mock('../client', () => ({
-  getSupabaseClientState: vi.fn(),
+  listCreators: vi.fn(),
 }));
 
 afterEach(() => {
@@ -24,13 +23,7 @@ function renderPage() {
 
 describe('ShowCreators', () => {
   it('shows loading before the creators resolve', () => {
-    getSupabaseClientState.mockReturnValue({
-      client: createListClient({
-        data: [],
-        error: null,
-      }),
-      error: null,
-    });
+    listCreators.mockReturnValue(new Promise(() => {}));
 
     renderPage();
 
@@ -38,28 +31,22 @@ describe('ShowCreators', () => {
   });
 
   it('renders creators returned from Supabase', async () => {
-    getSupabaseClientState.mockReturnValue({
-      client: createListClient({
-        data: [
-          {
-            id: 1,
-            name: 'Ada',
-            url: 'https://example.com/ada',
-            description: 'Builds with precision.',
-            imageURL: 'https://example.com/ada.jpg',
-          },
-          {
-            id: 2,
-            name: 'Grace',
-            url: 'https://example.com/grace',
-            description: 'Ships reliable systems.',
-            imageURL: '',
-          },
-        ],
-        error: null,
-      }),
-      error: null,
-    });
+    listCreators.mockResolvedValue([
+      {
+        id: 1,
+        name: 'Ada',
+        url: 'https://example.com/ada',
+        description: 'Builds with precision.',
+        imageURL: 'https://example.com/ada.jpg',
+      },
+      {
+        id: 2,
+        name: 'Grace',
+        url: 'https://example.com/grace',
+        description: 'Ships reliable systems.',
+        imageURL: '',
+      },
+    ]);
 
     renderPage();
 
@@ -69,13 +56,7 @@ describe('ShowCreators', () => {
   });
 
   it('shows an empty state when the database returns no creators', async () => {
-    getSupabaseClientState.mockReturnValue({
-      client: createListClient({
-        data: [],
-        error: null,
-      }),
-      error: null,
-    });
+    listCreators.mockResolvedValue([]);
 
     renderPage();
 
@@ -83,13 +64,7 @@ describe('ShowCreators', () => {
   });
 
   it('shows an error state when Supabase rejects the query', async () => {
-    getSupabaseClientState.mockReturnValue({
-      client: createListClient({
-        data: null,
-        error: { message: 'Database is unavailable' },
-      }),
-      error: null,
-    });
+    listCreators.mockRejectedValue(new Error('Database is unavailable'));
 
     renderPage();
 

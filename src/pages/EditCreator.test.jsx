@@ -2,11 +2,12 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import EditCreator from './EditCreator';
-import { getSupabaseClientState } from '../client';
-import { createHybridClient } from '../test/supabaseMock';
+import { deleteCreator, getCreator, updateCreator } from '../client';
 
 vi.mock('../client', () => ({
-  getSupabaseClientState: vi.fn(),
+  deleteCreator: vi.fn(),
+  getCreator: vi.fn(),
+  updateCreator: vi.fn(),
 }));
 
 afterEach(() => {
@@ -20,9 +21,7 @@ function LocationDisplay() {
   return <div data-testid="location">{location.pathname}</div>;
 }
 
-function renderPage(clientState) {
-  getSupabaseClientState.mockReturnValue(clientState);
-
+function renderPage() {
   return render(
     <MemoryRouter initialEntries={['/creators/7/edit']}>
       <LocationDisplay />
@@ -35,22 +34,14 @@ function renderPage(clientState) {
 
 describe('EditCreator', () => {
   it('prefills the form with creator data', async () => {
-    renderPage({
-      client: createHybridClient({
-        listResponse: { data: [], error: null },
-        detailResponse: {
-          data: {
-            id: 7,
-            name: 'Ada',
-            url: 'https://example.com/ada',
-            description: 'Builds with precision.',
-            imageURL: 'https://example.com/ada.jpg',
-          },
-          error: null,
-        },
-      }),
-      error: null,
+    getCreator.mockResolvedValue({
+      id: 7,
+      name: 'Ada',
+      url: 'https://example.com/ada',
+      description: 'Builds with precision.',
+      imageURL: 'https://example.com/ada.jpg',
     });
+    renderPage();
 
     expect(await screen.findByDisplayValue('Ada')).toBeInTheDocument();
     expect(screen.getByDisplayValue('https://example.com/ada')).toBeInTheDocument();
@@ -58,32 +49,21 @@ describe('EditCreator', () => {
   });
 
   it('updates the creator and redirects to the detail page', async () => {
-    renderPage({
-      client: createHybridClient({
-        listResponse: { data: [], error: null },
-        detailResponse: {
-          data: {
-            id: 7,
-            name: 'Ada',
-            url: 'https://example.com/ada',
-            description: 'Builds with precision.',
-            imageURL: 'https://example.com/ada.jpg',
-          },
-          error: null,
-        },
-        updateResponse: {
-          data: {
-            id: 7,
-            name: 'Ada Lovelace',
-            url: 'https://example.com/ada',
-            description: 'Builds with precision.',
-            imageURL: 'https://example.com/ada.jpg',
-          },
-          error: null,
-        },
-      }),
-      error: null,
+    getCreator.mockResolvedValue({
+      id: 7,
+      name: 'Ada',
+      url: 'https://example.com/ada',
+      description: 'Builds with precision.',
+      imageURL: 'https://example.com/ada.jpg',
     });
+    updateCreator.mockResolvedValue({
+      id: 7,
+      name: 'Ada Lovelace',
+      url: 'https://example.com/ada',
+      description: 'Builds with precision.',
+      imageURL: 'https://example.com/ada.jpg',
+    });
+    renderPage();
 
     await screen.findByDisplayValue('Ada');
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Ada Lovelace' } });
@@ -94,24 +74,15 @@ describe('EditCreator', () => {
 
   it('deletes the creator after confirmation and redirects to the creators list', async () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
-
-    renderPage({
-      client: createHybridClient({
-        listResponse: { data: [], error: null },
-        detailResponse: {
-          data: {
-            id: 7,
-            name: 'Ada',
-            url: 'https://example.com/ada',
-            description: 'Builds with precision.',
-            imageURL: 'https://example.com/ada.jpg',
-          },
-          error: null,
-        },
-        deleteResponse: { data: null, error: null },
-      }),
-      error: null,
+    getCreator.mockResolvedValue({
+      id: 7,
+      name: 'Ada',
+      url: 'https://example.com/ada',
+      description: 'Builds with precision.',
+      imageURL: 'https://example.com/ada.jpg',
     });
+    deleteCreator.mockResolvedValue(undefined);
+    renderPage();
 
     await screen.findByDisplayValue('Ada');
     fireEvent.click(screen.getByRole('button', { name: 'Delete creator' }));
@@ -121,65 +92,40 @@ describe('EditCreator', () => {
 
   it('does not delete when confirmation is canceled', async () => {
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
-
-    const client = createHybridClient({
-      listResponse: { data: [], error: null },
-      detailResponse: {
-        data: {
-          id: 7,
-          name: 'Ada',
-          url: 'https://example.com/ada',
-          description: 'Builds with precision.',
-          imageURL: 'https://example.com/ada.jpg',
-        },
-        error: null,
-      },
-      deleteResponse: { data: null, error: null },
+    getCreator.mockResolvedValue({
+      id: 7,
+      name: 'Ada',
+      url: 'https://example.com/ada',
+      description: 'Builds with precision.',
+      imageURL: 'https://example.com/ada.jpg',
     });
-
-    renderPage({
-      client,
-      error: null,
-    });
+    renderPage();
 
     await screen.findByDisplayValue('Ada');
     fireEvent.click(screen.getByRole('button', { name: 'Delete creator' }));
 
     expect(confirmSpy).toHaveBeenCalledOnce();
-    expect(client.from('creators').delete).not.toHaveBeenCalled();
+    expect(deleteCreator).not.toHaveBeenCalled();
     expect(screen.getByTestId('location')).toHaveTextContent('/creators/7/edit');
   });
 
   it('shows not found when the creator does not exist', async () => {
-    renderPage({
-      client: createHybridClient({
-        listResponse: { data: [], error: null },
-        detailResponse: { data: null, error: null },
-      }),
-      error: null,
-    });
+    getCreator.mockResolvedValue(null);
+    renderPage();
 
     expect(await screen.findByRole('heading', { name: 'Creator not found' })).toBeInTheDocument();
   });
 
   it('shows a readable error when update fails', async () => {
-    renderPage({
-      client: createHybridClient({
-        listResponse: { data: [], error: null },
-        detailResponse: {
-          data: {
-            id: 7,
-            name: 'Ada',
-            url: 'https://example.com/ada',
-            description: 'Builds with precision.',
-            imageURL: 'https://example.com/ada.jpg',
-          },
-          error: null,
-        },
-        updateResponse: { data: null, error: { message: 'Update failed' } },
-      }),
-      error: null,
+    getCreator.mockResolvedValue({
+      id: 7,
+      name: 'Ada',
+      url: 'https://example.com/ada',
+      description: 'Builds with precision.',
+      imageURL: 'https://example.com/ada.jpg',
     });
+    updateCreator.mockRejectedValue(new Error('Update failed'));
+    renderPage();
 
     await screen.findByDisplayValue('Ada');
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Ada Lovelace' } });
@@ -191,24 +137,15 @@ describe('EditCreator', () => {
 
   it('shows a readable error when delete fails', async () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
-
-    renderPage({
-      client: createHybridClient({
-        listResponse: { data: [], error: null },
-        detailResponse: {
-          data: {
-            id: 7,
-            name: 'Ada',
-            url: 'https://example.com/ada',
-            description: 'Builds with precision.',
-            imageURL: 'https://example.com/ada.jpg',
-          },
-          error: null,
-        },
-        deleteResponse: { data: null, error: { message: 'Delete failed' } },
-      }),
-      error: null,
+    getCreator.mockResolvedValue({
+      id: 7,
+      name: 'Ada',
+      url: 'https://example.com/ada',
+      description: 'Builds with precision.',
+      imageURL: 'https://example.com/ada.jpg',
     });
+    deleteCreator.mockRejectedValue(new Error('Delete failed'));
+    renderPage();
 
     await screen.findByDisplayValue('Ada');
     fireEvent.click(screen.getByRole('button', { name: 'Delete creator' }));

@@ -2,11 +2,15 @@ import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import App from './App';
-import { getSupabaseClientState } from './client';
-import { createHybridClient, createListClient } from './test/supabaseMock';
+import { getCreator, getSupabaseClientState, listCreators } from './client';
 
 vi.mock('./client', () => ({
+  createCreator: vi.fn(),
+  deleteCreator: vi.fn(),
+  getCreator: vi.fn(),
   getSupabaseClientState: vi.fn(),
+  listCreators: vi.fn(),
+  updateCreator: vi.fn(),
 }));
 
 afterEach(() => {
@@ -31,20 +35,18 @@ function renderAt(path) {
 describe('App', () => {
   it('renders the landing page and loaded creators list on the homepage', async () => {
     getSupabaseClientState.mockReturnValue({
-      client: createListClient({
-        data: [
-          {
-            id: 1,
-            name: 'Ada',
-            url: 'https://example.com/ada',
-            description: 'Mathematician and creator.',
-            imageURL: '',
-          },
-        ],
-        error: null,
-      }),
+      client: {},
       error: null,
     });
+    listCreators.mockResolvedValue([
+      {
+        id: 1,
+        name: 'Ada',
+        url: 'https://example.com/ada',
+        description: 'Mathematician and creator.',
+        imageURL: '',
+      },
+    ]);
 
     renderAt('/');
 
@@ -64,20 +66,18 @@ describe('App', () => {
 
   it('renders /creators as the same combined homepage experience', async () => {
     getSupabaseClientState.mockReturnValue({
-      client: createListClient({
-        data: [
-          {
-            id: 1,
-            name: 'Ada',
-            url: 'https://example.com/ada',
-            description: 'Mathematician and creator.',
-            imageURL: '',
-          },
-        ],
-        error: null,
-      }),
+      client: {},
       error: null,
     });
+    listCreators.mockResolvedValue([
+      {
+        id: 1,
+        name: 'Ada',
+        url: 'https://example.com/ada',
+        description: 'Mathematician and creator.',
+        imageURL: '',
+      },
+    ]);
 
     renderAt('/creators');
 
@@ -89,12 +89,11 @@ describe('App', () => {
 
   it('renders every frozen route shell', () => {
     getSupabaseClientState.mockReturnValue({
-      client: createHybridClient({
-        listResponse: { data: [], error: null },
-        detailResponse: { data: null, error: null },
-      }),
+      client: {},
       error: null,
     });
+    listCreators.mockResolvedValue([]);
+    getCreator.mockResolvedValue(null);
 
     renderAt('/creators/new');
     expect(screen.getByRole('heading', { name: 'New creator' })).toBeInTheDocument();

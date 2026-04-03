@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getSupabaseClientState } from '../client';
-
-const CREATOR_FIELDS = 'id, name, url, description, imageURL';
+import { getCreator } from '../client';
 
 function CreatorImage({ creator }) {
   if (creator.imageURL) {
@@ -26,41 +24,34 @@ export default function ViewCreator() {
     let active = true;
 
     async function loadCreator() {
-      const { client, error } = getSupabaseClientState();
+      try {
+        setStatus('loading');
+        const data = await getCreator(id);
 
-      if (error) {
-        if (active) {
-          setMessage(error);
-          setStatus('error');
+        if (!active) {
+          return;
         }
-        return;
-      }
 
-      setStatus('loading');
-      const { data, error: queryError } = await client
-        .from('creators')
-        .select(CREATOR_FIELDS)
-        .eq('id', id)
-        .maybeSingle();
+        if (!data) {
+          setCreator(null);
+          setStatus('notFound');
+          return;
+        }
 
-      if (!active) {
-        return;
-      }
+        setCreator(data);
+        setStatus('ready');
+      } catch (loadError) {
+        if (!active) {
+          return;
+        }
 
-      if (queryError) {
-        setMessage(queryError.message);
+        setMessage(
+          loadError instanceof Error && loadError.message
+            ? loadError.message
+            : 'Unable to load this creator right now.',
+        );
         setStatus('error');
-        return;
       }
-
-      if (!data) {
-        setCreator(null);
-        setStatus('notFound');
-        return;
-      }
-
-      setCreator(data);
-      setStatus('ready');
     }
 
     loadCreator();
@@ -82,7 +73,7 @@ export default function ViewCreator() {
         <article className="panel state-panel" role="status" aria-live="polite">
           <p className="eyebrow">Loading</p>
           <h2>Fetching creator</h2>
-          <p>Loading creator {id} from Supabase.</p>
+          <p>Loading creator {id} from the creators API.</p>
         </article>
       ) : null}
 

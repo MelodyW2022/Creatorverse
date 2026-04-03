@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import CreatorCard from '../components/CreatorCard';
-import { getSupabaseClientState } from '../client';
-
-const CREATOR_FIELDS = 'id, name, url, description, imageURL';
+import { listCreators } from '../client';
 
 export default function ShowCreators({ embedded = false, refreshToken = 0 } = {}) {
   const [creators, setCreators] = useState([]);
@@ -13,31 +11,28 @@ export default function ShowCreators({ embedded = false, refreshToken = 0 } = {}
     let active = true;
 
     async function loadCreators() {
-      const { client, error } = getSupabaseClientState();
+      try {
+        setStatus('loading');
+        const data = await listCreators();
 
-      if (error) {
-        if (active) {
-          setMessage(error);
-          setStatus('error');
+        if (!active) {
+          return;
         }
-        return;
-      }
 
-      setStatus('loading');
-      const { data, error: queryError } = await client.from('creators').select(CREATOR_FIELDS);
+        setCreators(data);
+        setStatus('ready');
+      } catch (loadError) {
+        if (!active) {
+          return;
+        }
 
-      if (!active) {
-        return;
-      }
-
-      if (queryError) {
-        setMessage(queryError.message);
+        setMessage(
+          loadError instanceof Error && loadError.message
+            ? loadError.message
+            : 'Unable to load creators right now.',
+        );
         setStatus('error');
-        return;
       }
-
-      setCreators(data ?? []);
-      setStatus('ready');
     }
 
     loadCreators();
@@ -59,7 +54,7 @@ export default function ShowCreators({ embedded = false, refreshToken = 0 } = {}
         <article className="panel state-panel" role="status" aria-live="polite">
           <p className="eyebrow">Loading</p>
           <h2>Fetching creators</h2>
-          <p>Loading the latest creator list from Supabase.</p>
+          <p>Loading the latest creator list from the creators API.</p>
         </article>
       ) : null}
 

@@ -2,11 +2,11 @@ import { MemoryRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import LandingPage from './LandingPage';
-import { getSupabaseClientState } from '../client';
-import { createListClient } from '../test/supabaseMock';
+import { listCreators } from '../client';
 
 vi.mock('../client', () => ({
-  getSupabaseClientState: vi.fn(),
+  createCreator: vi.fn(),
+  listCreators: vi.fn(),
 }));
 
 afterEach(() => {
@@ -16,13 +16,7 @@ afterEach(() => {
 
 describe('LandingPage', () => {
   it('renders the splash screen actions and embedded add section', () => {
-    getSupabaseClientState.mockReturnValue({
-      client: createListClient({
-        data: [],
-        error: null,
-      }),
-      error: null,
-    });
+    listCreators.mockResolvedValue([]);
 
     render(
       <MemoryRouter>

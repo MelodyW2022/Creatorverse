@@ -1,30 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getSupabaseClientState } from '../client';
+import { createCreator } from '../client';
 import CreatorForm from '../components/CreatorForm';
-
-const CREATOR_FIELDS = 'id, name, url, description, imageURL';
 
 export default function AddCreator({ embedded = false, onCreated } = {}) {
   const navigate = useNavigate();
   const [formKey, setFormKey] = useState(0);
 
   async function handleCreateCreator(values) {
-    const { client, error } = getSupabaseClientState();
-
-    if (error) {
-      throw new Error(error);
-    }
-
-    const { data, error: insertError } = await client
-      .from('creators')
-      .insert([values])
-      .select(CREATOR_FIELDS)
-      .maybeSingle();
-
-    if (insertError) {
-      throw new Error(insertError.message);
-    }
+    const data = await createCreator(values);
 
     if (!data) {
       throw new Error('Creator could not be created.');
@@ -50,7 +34,7 @@ export default function AddCreator({ embedded = false, onCreated } = {}) {
       <CreatorForm
         key={formKey}
         title="Add a creator"
-        description="Enter the creator's public details and save them to Supabase."
+        description="Enter the creator's public details and save them through the creators API."
         submitLabel="Create creator"
         onSubmit={handleCreateCreator}
       />

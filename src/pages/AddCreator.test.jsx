@@ -2,11 +2,10 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import AddCreator from './AddCreator';
-import { getSupabaseClientState } from '../client';
-import { createHybridClient } from '../test/supabaseMock';
+import { createCreator } from '../client';
 
 vi.mock('../client', () => ({
-  getSupabaseClientState: vi.fn(),
+  createCreator: vi.fn(),
 }));
 
 afterEach(() => {
@@ -19,9 +18,7 @@ function LocationDisplay() {
   return <div data-testid="location">{location.pathname}</div>;
 }
 
-function renderPage(clientState) {
-  getSupabaseClientState.mockReturnValue(clientState);
-
+function renderPage() {
   return render(
     <MemoryRouter initialEntries={['/creators/new']}>
       <LocationDisplay />
@@ -34,22 +31,14 @@ function renderPage(clientState) {
 
 describe('AddCreator', () => {
   it('creates a creator and redirects to the creators list', async () => {
-    renderPage({
-      client: createHybridClient({
-        listResponse: { data: [], error: null },
-        detailResponse: {
-          data: {
-            id: 10,
-            name: 'Ada',
-            url: 'https://example.com/ada',
-            description: 'Builds with precision.',
-            imageURL: 'https://example.com/ada.jpg',
-          },
-          error: null,
-        },
-      }),
-      error: null,
+    createCreator.mockResolvedValue({
+      id: 10,
+      name: 'Ada',
+      url: 'https://example.com/ada',
+      description: 'Builds with precision.',
+      imageURL: 'https://example.com/ada.jpg',
     });
+    renderPage();
 
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Ada' } });
     fireEvent.change(screen.getByLabelText('URL'), { target: { value: 'https://example.com/ada' } });
@@ -65,13 +54,8 @@ describe('AddCreator', () => {
   });
 
   it('shows a readable error when creation fails', async () => {
-    renderPage({
-      client: createHybridClient({
-        listResponse: { data: [], error: null },
-        detailResponse: { data: null, error: { message: 'Insert failed' } },
-      }),
-      error: null,
-    });
+    createCreator.mockRejectedValue(new Error('Insert failed'));
+    renderPage();
 
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Ada' } });
     fireEvent.change(screen.getByLabelText('URL'), { target: { value: 'https://example.com/ada' } });

@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getSupabaseClientState } from '../client';
+import { deleteCreator, getCreator, updateCreator } from '../client';
 import CreatorForm from '../components/CreatorForm';
-
-const CREATOR_FIELDS = 'id, name, url, description, imageURL';
 
 export default function EditCreator() {
   const { id } = useParams();
@@ -18,44 +16,36 @@ export default function EditCreator() {
     let active = true;
 
     async function loadCreator() {
-      const { client, error } = getSupabaseClientState();
+      try {
+        setStatus('loading');
+        setMessage('');
+        setCreator(null);
 
-      if (error) {
-        if (active) {
-          setMessage(error);
-          setStatus('error');
+        const data = await getCreator(id);
+
+        if (!active) {
+          return;
         }
 
-        return;
-      }
+        if (!data) {
+          setStatus('notFound');
+          return;
+        }
 
-      setStatus('loading');
-      setMessage('');
-      setCreator(null);
+        setCreator(data);
+        setStatus('ready');
+      } catch (loadError) {
+        if (!active) {
+          return;
+        }
 
-      const { data, error: queryError } = await client
-        .from('creators')
-        .select(CREATOR_FIELDS)
-        .eq('id', id)
-        .maybeSingle();
-
-      if (!active) {
-        return;
-      }
-
-      if (queryError) {
-        setMessage(queryError.message);
+        setMessage(
+          loadError instanceof Error && loadError.message
+            ? loadError.message
+            : 'Unable to load this creator right now.',
+        );
         setStatus('error');
-        return;
       }
-
-      if (!data) {
-        setStatus('notFound');
-        return;
-      }
-
-      setCreator(data);
-      setStatus('ready');
     }
 
     loadCreator();
@@ -66,22 +56,7 @@ export default function EditCreator() {
   }, [id]);
 
   async function handleUpdateCreator(values) {
-    const { client, error } = getSupabaseClientState();
-
-    if (error) {
-      throw new Error(error);
-    }
-
-    const { data, error: updateError } = await client
-      .from('creators')
-      .update(values)
-      .eq('id', id)
-      .select(CREATOR_FIELDS)
-      .maybeSingle();
-
-    if (updateError) {
-      throw new Error(updateError.message);
-    }
+    const data = await updateCreator(id, values);
 
     if (!data) {
       throw new Error('Creator could not be updated.');
@@ -97,23 +72,11 @@ export default function EditCreator() {
       return;
     }
 
-    const { client, error } = getSupabaseClientState();
-
-    if (error) {
-      setDeleteMessage(error);
-      return;
-    }
-
     setIsDeleting(true);
     setDeleteMessage('');
 
     try {
-      const { error: deleteError } = await client.from('creators').delete().eq('id', id);
-
-      if (deleteError) {
-        throw new Error(deleteError.message);
-      }
-
+      await deleteCreator(id);
       navigate('/creators');
     } catch (deleteError) {
       setDeleteMessage(
@@ -138,7 +101,7 @@ export default function EditCreator() {
         <article className="panel state-panel" role="status" aria-live="polite">
           <p className="eyebrow">Loading</p>
           <h2>Fetching creator</h2>
-          <p>Loading creator {id} from Supabase.</p>
+          <p>Loading creator {id} from the creators API.</p>
         </article>
       ) : null}
 
@@ -170,7 +133,7 @@ export default function EditCreator() {
 
           <CreatorForm
             title="Edit creator"
-            description="Adjust the details and save the changes back to Supabase."
+            description="Adjust the details and save the changes through the creators API."
             initialValues={creator}
             submitLabel="Save changes"
             onSubmit={handleUpdateCreator}

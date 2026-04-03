@@ -2,11 +2,10 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import ViewCreator from './ViewCreator';
-import { getSupabaseClientState } from '../client';
-import { createDetailClient } from '../test/supabaseMock';
+import { getCreator } from '../client';
 
 vi.mock('../client', () => ({
-  getSupabaseClientState: vi.fn(),
+  getCreator: vi.fn(),
 }));
 
 afterEach(() => {
@@ -26,13 +25,7 @@ function renderPage(path = '/creators/1') {
 
 describe('ViewCreator', () => {
   it('shows loading before the creator resolves', () => {
-    getSupabaseClientState.mockReturnValue({
-      client: createDetailClient({
-        data: null,
-        error: null,
-      }),
-      error: null,
-    });
+    getCreator.mockReturnValue(new Promise(() => {}));
 
     renderPage();
 
@@ -40,18 +33,12 @@ describe('ViewCreator', () => {
   });
 
   it('renders a creator returned from Supabase', async () => {
-    getSupabaseClientState.mockReturnValue({
-      client: createDetailClient({
-        data: {
-          id: 1,
-          name: 'Ada',
-          url: 'https://example.com/ada',
-          description: 'Builds with precision.',
-          imageURL: 'https://example.com/ada.jpg',
-        },
-        error: null,
-      }),
-      error: null,
+    getCreator.mockResolvedValue({
+      id: 1,
+      name: 'Ada',
+      url: 'https://example.com/ada',
+      description: 'Builds with precision.',
+      imageURL: 'https://example.com/ada.jpg',
     });
 
     renderPage();
@@ -68,13 +55,7 @@ describe('ViewCreator', () => {
   });
 
   it('shows not found when the creator does not exist', async () => {
-    getSupabaseClientState.mockReturnValue({
-      client: createDetailClient({
-        data: null,
-        error: null,
-      }),
-      error: null,
-    });
+    getCreator.mockResolvedValue(null);
 
     renderPage();
 
@@ -82,13 +63,7 @@ describe('ViewCreator', () => {
   });
 
   it('shows an error state when Supabase rejects the query', async () => {
-    getSupabaseClientState.mockReturnValue({
-      client: createDetailClient({
-        data: null,
-        error: { message: 'Record lookup failed' },
-      }),
-      error: null,
-    });
+    getCreator.mockRejectedValue(new Error('Record lookup failed'));
 
     renderPage();
 
